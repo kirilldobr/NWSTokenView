@@ -4,14 +4,14 @@
 //
 //  Created by James Hickman on 8/11/15.
 /*
-Copyright (c) 2015 NitWit Studios, LLC
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.//
-*/
+ Copyright (c) 2015 NitWit Studios, LLC
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.//
+ */
 
 import UIKit
 
@@ -60,6 +60,8 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
     var tokenHeight: CGFloat = 30.0 // Default
     var didReloadFromRotation = false
     
+    open var editable = true
+    
     // MARK: Constants
     var labelMinimumHeight: CGFloat = 30.0
     var labelMinimumWidth: CGFloat = 30.0
@@ -77,7 +79,7 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
     override open func awakeFromNib()
     {
         super.awakeFromNib()
-
+        
         // Set default scroll properties
         self.scrollView.backgroundColor = UIColor.clear
         self.scrollView.isScrollEnabled = true
@@ -96,7 +98,12 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
         self.textView.delegate = self
         self.textView.isScrollEnabled = false
         self.textView.autocorrectionType = UITextAutocorrectionType.no // Hide suggestions to prevent UI issues with message bar / keyboard.
+        
+        self.textView.isUserInteractionEnabled = editable
+        
         self.scrollView.addSubview(self.textView)
+        
+        
         
         // Auto Layout Constraints
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -105,7 +112,7 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
         NSLayoutConstraint(item: self.scrollView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.right, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: self.scrollView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: self.scrollView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant: 0).isActive = true
-
+        
         // Orientation Rotation Listener
         NotificationCenter.default.addObserver(self, selector: #selector(NWSTokenView.didRotateInterfaceOrientation), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
@@ -113,22 +120,22 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
     /// Reloads data when interface orientation is changed.
     func didRotateInterfaceOrientation()
     {
-        // Ignore "flat" orientation
-        if UIDevice.current.orientation == UIDeviceOrientation.faceUp || UIDevice.current.orientation == UIDeviceOrientation.faceDown || UIDevice.current.orientation == UIDeviceOrientation.unknown
-        {
-            return
-        }
-        
-        // Prevent keyboard from hiding on rotation due to reloadData called from delegate
-        if self.textView.isFirstResponder
-        {
-            self.shouldBecomeFirstResponder = true
-        }
-        
-        // Save rotation flag (for use with selected tokens)
-        self.didReloadFromRotation = true
-        
-        self.reloadData()
+        //        // Ignore "flat" orientation
+        //        if UIDevice.current.orientation == UIDeviceOrientation.faceUp || UIDevice.current.orientation == UIDeviceOrientation.faceDown || UIDevice.current.orientation == UIDeviceOrientation.unknown
+        //        {
+        //            return
+        //        }
+        //
+        //        // Prevent keyboard from hiding on rotation due to reloadData called from delegate
+        //        if self.textView.isFirstResponder
+        //        {
+        //            self.shouldBecomeFirstResponder = true
+        //        }
+        //
+        //        // Save rotation flag (for use with selected tokens)
+        //        self.didReloadFromRotation = true
+        //
+        //        self.reloadData()
     }
     
     /// Reloads data from datasource and delegate implementations.
@@ -193,7 +200,7 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
         }
         
         // Check if text view should become first responder (i.e. new token added)
-        if self.shouldBecomeFirstResponder
+        if self.shouldBecomeFirstResponder && editable
         {
             self.textView.becomeFirstResponder()
             self.shouldBecomeFirstResponder = false
@@ -312,20 +319,22 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
             x = 0
             y += token.frame.height + self.tokenViewInsets.top
         }
-        token.frame = CGRect(x: x+self.tokenViewInsets.left, y: y, width: min(token.bounds.width, self.scrollView.bounds.width-x-self.tokenViewInsets.left-self.tokenViewInsets.right), height: token.bounds.height)
+        
+        
+        token.frame = CGRect(x: x + self.tokenViewInsets.left + self.tokenViewInsets.right, y: y, width: min(token.bounds.width, self.scrollView.bounds.width-x-self.tokenViewInsets.left-self.tokenViewInsets.right), height: token.bounds.height)
         
         self.scrollView.addSubview(token)
         
         // Update frame data
-        x += self.tokenViewInsets.left + token.frame.width
+        x += self.tokenViewInsets.left + token.frame.width + self.tokenViewInsets.right
         remainingWidth = self.scrollView.bounds.width - x
         
         // Check if previously selected (i.e. pre-rotation)
-//        if self.selectedToken != nil && self.selectedToken?.titleLabel.text == token.titleLabel.text
-//        {
-//            self.selectedToken = nil // Reset so selectToken function properly sets token
-//            self.selectToken(token)
-//        }
+        //        if self.selectedToken != nil && self.selectedToken?.titleLabel.text == token.titleLabel.text
+        //        {
+        //            self.selectedToken = nil // Reset so selectToken function properly sets token
+        //            self.selectToken(token)
+        //        }
     }
     
     /// Returns a generated token.
@@ -364,7 +373,12 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
         if token.isSelected
         {
             token.hiddenTextView.delegate = self
-            token.hiddenTextView.becomeFirstResponder()
+            
+            if editable
+            {
+                token.hiddenTextView.becomeFirstResponder()
+            }
+            
             self.selectedToken = token
             self.delegate?.tokenView(self, didSelectTokenAtIndex: token.tag)
         }

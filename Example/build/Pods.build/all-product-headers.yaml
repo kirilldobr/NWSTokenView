@@ -4,28 +4,28 @@
   'roots': [
     {
       'type': 'directory',
-      'name': "/Users/James/GIT/NWSTokenView/Example/build/Debug-iphonesimulator/NWSTokenView.framework/Headers",
+      'name': "/Users/kirilldobryakov/Documents/NWSTokenView/Example/build/Debug-iphoneos/NWSTokenView/NWSTokenView.framework/Headers",
       'contents': [
         {
           'type': 'file',
           'name': "NWSTokenView-Swift.h",
-          'external-contents': "/Users/James/GIT/NWSTokenView/Example/build/Debug-iphonesimulator/NWSTokenView.framework/Headers/NWSTokenView-Swift.h"
+          'external-contents': "/Users/kirilldobryakov/Documents/NWSTokenView/Example/build/Debug-iphoneos/NWSTokenView/NWSTokenView.framework/Headers/NWSTokenView-Swift.h"
         },
         {
           'type': 'file',
           'name': "NWSTokenView-umbrella.h",
-          'external-contents': "/Users/James/GIT/NWSTokenView/Example/Pods/Target Support Files/NWSTokenView/NWSTokenView-umbrella.h"
+          'external-contents': "/Users/kirilldobryakov/Documents/NWSTokenView/Example/Pods/Target Support Files/NWSTokenView/NWSTokenView-umbrella.h"
         }
       ]
     },
     {
       'type': 'directory',
-      'name': "/Users/James/GIT/NWSTokenView/Example/build/Debug-iphonesimulator/NWSTokenView.framework/Modules",
+      'name': "/Users/kirilldobryakov/Documents/NWSTokenView/Example/build/Debug-iphoneos/NWSTokenView/NWSTokenView.framework/Modules",
       'contents': [
         {
           'type': 'file',
           'name': "module.modulemap",
-          'external-contents': "/Users/James/GIT/NWSTokenView/Example/build/Pods.build/Debug-iphonesimulator/NWSTokenView.build/module.modulemap"
+          'external-contents': "/Users/kirilldobryakov/Documents/NWSTokenView/Example/build/Pods.build/Debug-iphoneos/NWSTokenView.build/module.modulemap"
         }
       ]
     }
