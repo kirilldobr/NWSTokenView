@@ -321,7 +321,7 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
         }
         
         
-        token.frame = CGRect(x: x + self.tokenViewInsets.left + self.tokenViewInsets.right, y: y, width: min(token.bounds.width, self.scrollView.bounds.width-x-self.tokenViewInsets.left-self.tokenViewInsets.right), height: token.bounds.height)
+        token.frame = CGRect(x: x + self.tokenViewInsets.left + self.tokenViewInsets.right, y: y + 4, width: min(token.bounds.width, self.scrollView.bounds.width-x-self.tokenViewInsets.left-self.tokenViewInsets.right), height: token.bounds.height)
         
         self.scrollView.addSubview(token)
         
