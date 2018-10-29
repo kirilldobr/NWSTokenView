@@ -42,8 +42,8 @@ public protocol NWSTokenDelegate
 // MARK: NWSTokenView Class
 open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
 {
-    @IBInspectable open var dataSource: NWSTokenDataSource? = nil
-    @IBInspectable open var delegate: NWSTokenDelegate? = nil
+    open var dataSource: NWSTokenDataSource? = nil
+    open var delegate: NWSTokenDelegate? = nil
     
     // MARK: Private Vars
     fileprivate var shouldBecomeFirstResponder: Bool = false
@@ -61,6 +61,8 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
     var didReloadFromRotation = false
     
     open var editable = true
+    
+    
     
     // MARK: Constants
     var labelMinimumHeight: CGFloat = 30.0
@@ -118,7 +120,7 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
     }
     
     /// Reloads data when interface orientation is changed.
-    func didRotateInterfaceOrientation()
+    @objc func didRotateInterfaceOrientation()
     {
         //        // Ignore "flat" orientation
         //        if UIDevice.current.orientation == UIDeviceOrientation.faceUp || UIDevice.current.orientation == UIDeviceOrientation.faceDown || UIDevice.current.orientation == UIDeviceOrientation.unknown
@@ -314,19 +316,33 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
         self.tokenHeight = token.frame.height
         
         // Check if token is out of view's bounds, move to new line if so (unless its first token, truncate it)
-        if remainingWidth <= self.tokenViewInsets.left + token.frame.width + self.tokenViewInsets.right && self.tokens.count > 1
+        if (remainingWidth <= self.tokenViewInsets.left + token.frame.width + self.tokenViewInsets.right && self.tokens.count > 1)
         {
             x = 0
             y += token.frame.height + self.tokenViewInsets.top
         }
         
+        if index == 0 {
+            x = 0
+        }
         
-        token.frame = CGRect(x: x + self.tokenViewInsets.left + self.tokenViewInsets.right, y: y + 4, width: min(token.bounds.width, self.scrollView.bounds.width-x-self.tokenViewInsets.left-self.tokenViewInsets.right), height: token.bounds.height)
+        //    if index == 0{
+        token.frame = CGRect(x: x, y: y + 4, width: min(token.bounds.width, self.scrollView.bounds.width-x-self.tokenViewInsets.left-self.tokenViewInsets.right), height: token.bounds.height)
+        //        } else{
+        //
+        //            token.frame = CGRect(x: x + self.tokenViewInsets.left + self.tokenViewInsets.right, y: y + 4, width: min(token.bounds.width, self.scrollView.bounds.width-x-self.tokenViewInsets.left-self.tokenViewInsets.right), height: token.bounds.height)
+        //        }
+        //
         
         self.scrollView.addSubview(token)
         
         // Update frame data
+        //if index == 0{
+        //x += token.frame.width + self.tokenViewInsets.right
+        //} else{
         x += self.tokenViewInsets.left + token.frame.width + self.tokenViewInsets.right
+        //}
+        
         remainingWidth = self.scrollView.bounds.width - x
         
         // Check if previously selected (i.e. pre-rotation)
@@ -352,7 +368,7 @@ open class NWSTokenView: UIView, UIScrollViewDelegate, UITextViewDelegate
     /// - parameter tapGesture: UITapGestureRecognizer associated with the token.
     ///
     /// - returns: NWSToken
-    open func didTapToken(_ tapGesture: UITapGestureRecognizer)
+    @objc open func didTapToken(_ tapGesture: UITapGestureRecognizer)
     {
         let token = tapGesture.view as! NWSToken
         self.selectToken(token)
